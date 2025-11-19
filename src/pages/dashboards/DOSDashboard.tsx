@@ -3,7 +3,6 @@ import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
-import { teachers, classes, exams, assignments } from "../../data/dummyData";
 
 export default function DOSDashboard() {
   // Mock academic data
@@ -130,14 +129,6 @@ export default function DOSDashboard() {
       description: "Pending marks submission",
       severity: "low" as const,
     },
-  ];
-
-  // Subject performance trends
-  const subjectTrends = [
-    { subject: "Mathematics", term1: 78, term2: 82, term3: 85, trend: "up" },
-    { subject: "English", term1: 80, term2: 81, term3: 82, trend: "stable" },
-    { subject: "Science", term1: 75, term2: 80, term3: 84, trend: "up" },
-    { subject: "History", term1: 82, term2: 80, term3: 80, trend: "down" },
   ];
 
   return (

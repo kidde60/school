@@ -3,7 +3,7 @@ import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
-import { feePayments, students } from "../../data/dummyData";
+import { students } from "../../data/dummyData";
 
 export default function FinanceDashboard() {
   // Mock financial data
@@ -401,7 +401,7 @@ export default function FinanceDashboard() {
             },
             {
               header: "Action",
-              accessor: (row) => (
+              accessor: () => (
                 <Button size="sm" variant="outline">
                   Send Reminder
                 </Button>

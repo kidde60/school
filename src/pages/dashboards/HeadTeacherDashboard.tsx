@@ -3,7 +3,6 @@ import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
-import { students, teachers, classes } from "../../data/dummyData";
 
 export default function HeadTeacherDashboard() {
   // Mock school overview data

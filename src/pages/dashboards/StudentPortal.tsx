@@ -3,7 +3,7 @@ import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
-import { assignments, exams, classes } from "../../data/dummyData";
+import { assignments, exams } from "../../data/dummyData";
 
 export default function StudentPortal() {
   // Mock student data
@@ -22,7 +22,6 @@ export default function StudentPortal() {
   const upcomingExams = exams.filter(
     (e) => e.class === studentInfo.class && e.status === "upcoming"
   );
-  const myClasses = classes.filter((c) => c.name === studentInfo.class);
 
   // Mock timetable data
   const timetable = [
@@ -109,7 +108,7 @@ export default function StudentPortal() {
   return (
     <div className="space-y-6">
       {/* Header with Student Info */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl p-6 text-white">
+      <div className="bg-linear-to-r from-blue-600 to-blue-800 rounded-xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold">{studentInfo.name}</h1>
@@ -384,7 +383,7 @@ export default function StudentPortal() {
                     key={index}
                     className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100"
                   >
-                    <div className="bg-blue-600 text-white rounded-lg p-3 text-center min-w-[80px]">
+                    <div className="bg-blue-600 text-white rounded-lg p-3 text-center min-w-20">
                       <div className="text-xs font-semibold">
                         {period.time.split(" - ")[0]}
                       </div>

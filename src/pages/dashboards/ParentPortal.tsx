@@ -1,9 +1,7 @@
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
-import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
-import { students, feePayments, assignments } from "../../data/dummyData";
 
 export default function ParentPortal() {
   // Mock parent and child data
