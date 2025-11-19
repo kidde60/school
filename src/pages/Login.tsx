@@ -1,10 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { login } from "../utils/auth";
 import type { UserRole } from "../types/auth.types";
-
-interface LoginProps {
-  onLogin: () => void;
-}
 
 const roleOptions: { value: UserRole; label: string; icon: string }[] = [
   { value: "head_teacher", label: "Head Teacher", icon: "👔" },
@@ -15,8 +12,9 @@ const roleOptions: { value: UserRole; label: string; icon: string }[] = [
   { value: "parent", label: "Parent", icon: "👨‍👩‍👧" },
 ];
 
-export default function Login({ onLogin }: LoginProps) {
-  const [email, setEmail] = useState("");
+export default function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("teacher@school.com");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole>("teacher");
   const [error, setError] = useState("");
@@ -31,7 +29,16 @@ export default function Login({ onLogin }: LoginProps) {
       const user = login(email, password, selectedRole);
 
       if (user) {
-        onLogin();
+        // Navigate to appropriate dashboard based on role
+        const routes: Record<UserRole, string> = {
+          head_teacher: "/head-teacher",
+          director_of_studies: "/director-of-studies",
+          finance: "/finance",
+          teacher: "/teacher",
+          student: "/student",
+          parent: "/parent",
+        };
+        navigate(routes[user.role]);
       } else {
         setError("Invalid credentials. Try: password123");
       }
