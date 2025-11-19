@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
@@ -6,6 +7,7 @@ import Button from "../../components/shared/Button";
 import { assignments, exams } from "../../data/dummyData";
 
 export default function StudentPortal() {
+  const navigate = useNavigate();
   // Mock student data
   const studentInfo = {
     name: "David Wilson",
@@ -410,7 +412,11 @@ export default function StudentPortal() {
       {/* Quick Actions */}
       <Card title="Quick Actions">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/assignments")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -458,7 +464,11 @@ export default function StudentPortal() {
             </svg>
             <span className="mt-2 text-sm">Ask Teacher</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/reports")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
