@@ -48,6 +48,8 @@ export interface Exam {
   subject: string;
   date: string;
   class: string;
+  startTime?: string;
+  duration?: string;
   totalMarks: number;
   status: "upcoming" | "ongoing" | "completed";
 }
@@ -255,6 +257,8 @@ export const exams: Exam[] = [
     subject: "Mathematics",
     date: "2025-11-30",
     class: "Grade 10A",
+    startTime: "09:00",
+    duration: "2 hours",
     totalMarks: 100,
     status: "upcoming",
   },
@@ -264,6 +268,8 @@ export const exams: Exam[] = [
     subject: "English",
     date: "2025-12-05",
     class: "Grade 10A",
+    startTime: "10:00",
+    duration: "3 hours",
     totalMarks: 100,
     status: "upcoming",
   },
@@ -273,6 +279,8 @@ export const exams: Exam[] = [
     subject: "Science",
     date: "2025-11-18",
     class: "Grade 10B",
+    startTime: "14:00",
+    duration: "1 hour",
     totalMarks: 50,
     status: "completed",
   },

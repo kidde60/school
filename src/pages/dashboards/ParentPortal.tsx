@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
 
 export default function ParentPortal() {
+  const navigate = useNavigate();
   // Mock parent and child data
   const parentInfo = {
     name: "Robert Taylor",
@@ -529,7 +531,11 @@ export default function ParentPortal() {
       {/* Quick Actions */}
       <Card title="Quick Actions">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/parent/fees")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -545,7 +551,11 @@ export default function ParentPortal() {
             </svg>
             <span className="mt-2 text-sm">Pay Fees</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/reports")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -561,7 +571,11 @@ export default function ParentPortal() {
             </svg>
             <span className="mt-2 text-sm">Download Report</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/attendance")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"

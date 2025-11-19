@@ -1,11 +1,25 @@
+import { useState } from "react";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
+import RecordPaymentModal, {
+  type PaymentFormData,
+} from "../../components/modals/RecordPaymentModal";
 import { students } from "../../data/dummyData";
 
 export default function FinanceDashboard() {
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  const handleRecordPayment = (paymentData: PaymentFormData) => {
+    console.log("Payment recorded:", paymentData);
+    alert(
+      `Payment of UGX ${paymentData.amount.toLocaleString()} recorded for ${
+        paymentData.studentName
+      }`
+    );
+  };
   // Mock financial data
   const financialSummary = {
     totalRevenue: 15750000,
@@ -472,7 +486,11 @@ export default function FinanceDashboard() {
       {/* Quick Actions */}
       <Card title="Quick Actions">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => setIsPaymentModalOpen(true)}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -538,6 +556,12 @@ export default function FinanceDashboard() {
           </Button>
         </div>
       </Card>
+
+      <RecordPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onSubmit={handleRecordPayment}
+      />
     </div>
   );
 }
