@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
@@ -5,6 +6,7 @@ import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
 
 export default function HeadTeacherDashboard() {
+  const navigate = useNavigate();
   // Mock school overview data
   const schoolOverview = {
     totalStudents: 543,
@@ -443,7 +445,11 @@ export default function HeadTeacherDashboard() {
       {/* Quick Actions */}
       <Card title="Administrative Actions">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/students")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -459,7 +465,11 @@ export default function HeadTeacherDashboard() {
             </svg>
             <span className="mt-2 text-sm">Admit Student</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/teachers")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -475,7 +485,11 @@ export default function HeadTeacherDashboard() {
             </svg>
             <span className="mt-2 text-sm">Manage Staff</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/reports")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"

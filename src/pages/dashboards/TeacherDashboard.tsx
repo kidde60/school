@@ -1,11 +1,35 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
+import TakeAttendanceModal, {
+  type AttendanceFormData,
+} from "../../components/modals/TakeAttendanceModal";
+import AddAssignmentModal, {
+  type AssignmentFormData,
+} from "../../components/modals/AddAssignmentModal";
 import { assignments, classes, attendance } from "../../data/dummyData";
 
 export default function TeacherDashboard() {
+  const navigate = useNavigate();
+  const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
+  const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
+
+  const handleTakeAttendance = (attendanceData: AttendanceFormData) => {
+    console.log("Attendance recorded:", attendanceData);
+    alert(
+      `Attendance recorded for ${attendanceData.class} - ${attendanceData.subject}`
+    );
+  };
+
+  const handleAddAssignment = (assignmentData: AssignmentFormData) => {
+    console.log("Assignment created:", assignmentData);
+    alert(`Assignment "${assignmentData.title}" created successfully!`);
+  };
+
   // Filter data for current teacher
   const myClasses = classes.slice(0, 3);
   const recentAssignments = assignments.slice(0, 3);
@@ -246,6 +270,7 @@ export default function TeacherDashboard() {
           <Button
             variant="outline"
             className="flex-col h-24"
+            onClick={() => setIsAttendanceModalOpen(true)}
             leftIcon={
               <svg
                 className="w-8 h-8"
@@ -267,6 +292,7 @@ export default function TeacherDashboard() {
           <Button
             variant="outline"
             className="flex-col h-24"
+            onClick={() => setIsAssignmentModalOpen(true)}
             leftIcon={
               <svg
                 className="w-8 h-8"
@@ -288,6 +314,7 @@ export default function TeacherDashboard() {
           <Button
             variant="outline"
             className="flex-col h-24"
+            onClick={() => navigate("/exams")}
             leftIcon={
               <svg
                 className="w-8 h-8"
@@ -329,6 +356,18 @@ export default function TeacherDashboard() {
           </Button>
         </div>
       </Card>
+
+      <TakeAttendanceModal
+        isOpen={isAttendanceModalOpen}
+        onClose={() => setIsAttendanceModalOpen(false)}
+        onSubmit={handleTakeAttendance}
+      />
+
+      <AddAssignmentModal
+        isOpen={isAssignmentModalOpen}
+        onClose={() => setIsAssignmentModalOpen(false)}
+        onSubmit={handleAddAssignment}
+      />
     </div>
   );
 }
