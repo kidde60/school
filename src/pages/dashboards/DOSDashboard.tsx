@@ -1,10 +1,22 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StatsCard from "../../components/shared/StatsCard";
 import Card from "../../components/shared/Card";
 import Table from "../../components/shared/Table";
 import Badge from "../../components/shared/Badge";
 import Button from "../../components/shared/Button";
+import ScheduleExamModal, {
+  type ExamFormData,
+} from "../../components/modals/ScheduleExamModal";
 
 export default function DOSDashboard() {
+  const navigate = useNavigate();
+  const [isExamModalOpen, setIsExamModalOpen] = useState(false);
+
+  const handleScheduleExam = (examData: ExamFormData) => {
+    console.log("Exam scheduled:", examData);
+    alert(`Exam "${examData.name}" scheduled successfully!`);
+  };
   // Mock academic data
   const academicOverview = {
     totalClasses: 18,
@@ -469,7 +481,11 @@ export default function DOSDashboard() {
             </svg>
             <span className="mt-2 text-sm">Create Timetable</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => setIsExamModalOpen(true)}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -485,7 +501,11 @@ export default function DOSDashboard() {
             </svg>
             <span className="mt-2 text-sm">Schedule Exam</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/teachers")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -507,7 +527,11 @@ export default function DOSDashboard() {
             </svg>
             <span className="mt-2 text-sm">Monitor Teachers</span>
           </Button>
-          <Button variant="outline" className="flex-col h-24">
+          <Button
+            variant="outline"
+            className="flex-col h-24"
+            onClick={() => navigate("/reports")}
+          >
             <svg
               className="w-8 h-8"
               fill="none"
@@ -525,6 +549,12 @@ export default function DOSDashboard() {
           </Button>
         </div>
       </Card>
+
+      <ScheduleExamModal
+        isOpen={isExamModalOpen}
+        onClose={() => setIsExamModalOpen(false)}
+        onSubmit={handleScheduleExam}
+      />
     </div>
   );
 }
