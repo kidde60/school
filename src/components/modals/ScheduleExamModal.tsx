@@ -6,6 +6,8 @@ interface ScheduleExamModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (exam: ExamFormData) => void;
+  initialData?: ExamFormData;
+  isEditMode?: boolean;
 }
 
 export interface ExamFormData {
@@ -23,6 +25,8 @@ export default function ScheduleExamModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: ScheduleExamModalProps) {
   const [formData, setFormData] = useState<ExamFormData>({
     name: "",
@@ -33,6 +37,7 @@ export default function ScheduleExamModal({
     duration: "",
     totalMarks: 100,
     instructions: "",
+    ...initialData,
   });
 
   const [errors, setErrors] = useState<Partial<ExamFormData>>({});
@@ -105,14 +110,16 @@ export default function ScheduleExamModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Schedule Examination"
+      title={isEditMode ? "Edit Examination" : "Schedule Examination"}
       size="xl"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Schedule Exam</Button>
+          <Button onClick={handleSubmit}>
+            {isEditMode ? "Update Exam" : "Schedule Exam"}
+          </Button>
         </>
       }
     >

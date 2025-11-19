@@ -6,6 +6,8 @@ interface AddAssignmentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (assignment: AssignmentFormData) => void;
+  initialData?: AssignmentFormData;
+  isEditMode?: boolean;
 }
 
 export interface AssignmentFormData {
@@ -21,15 +23,19 @@ export default function AddAssignmentModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: AddAssignmentModalProps) {
-  const [formData, setFormData] = useState<AssignmentFormData>({
-    title: "",
-    subject: "",
-    class: "",
-    description: "",
-    dueDate: "",
-    totalMarks: 100,
-  });
+  const [formData, setFormData] = useState<AssignmentFormData>(
+    initialData || {
+      title: "",
+      subject: "",
+      class: "",
+      description: "",
+      dueDate: "",
+      totalMarks: 100,
+    }
+  );
 
   const [errors, setErrors] = useState<Partial<AssignmentFormData>>({});
 
@@ -95,14 +101,16 @@ export default function AddAssignmentModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Create Assignment"
+      title={isEditMode ? "Edit Assignment" : "Create Assignment"}
       size="lg"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Create Assignment</Button>
+          <Button onClick={handleSubmit}>
+            {isEditMode ? "Update Assignment" : "Create Assignment"}
+          </Button>
         </>
       }
     >

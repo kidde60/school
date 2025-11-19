@@ -12,19 +12,51 @@ import { teachers as initialTeachers } from "../../data/dummyData";
 export default function TeachersList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [teachers, setTeachers] = useState(initialTeachers);
+  const [editingTeacher, setEditingTeacher] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleAddTeacher = (teacherData: TeacherFormData) => {
-    const newTeacher = {
-      id: `T${String(teachers.length + 1).padStart(3, "0")}`,
-      name: teacherData.name,
-      email: teacherData.email,
-      subject: teacherData.subject,
-      phone: teacherData.phone,
-      classes: [],
-      status: "active" as const,
-    };
-    setTeachers([...teachers, newTeacher]);
-    alert("Teacher added successfully!");
+    if (isEditMode && editingTeacher) {
+      setTeachers(
+        teachers.map((t) =>
+          t.id === editingTeacher.id ? { ...t, ...teacherData } : t
+        )
+      );
+      alert("Teacher updated successfully!");
+      setIsEditMode(false);
+      setEditingTeacher(null);
+    } else {
+      const newTeacher = {
+        id: `T${String(teachers.length + 1).padStart(3, "0")}`,
+        name: teacherData.name,
+        email: teacherData.email,
+        subject: teacherData.subject,
+        phone: teacherData.phone,
+        classes: [],
+        status: "active" as const,
+      };
+      setTeachers([...teachers, newTeacher]);
+      alert("Teacher added successfully!");
+    }
+  };
+
+  const handleEditTeacher = (teacher: any) => {
+    setEditingTeacher(teacher);
+    setIsEditMode(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteTeacher = (teacherId: string, teacherName: string) => {
+    if (window.confirm(`Are you sure you want to delete ${teacherName}?`)) {
+      setTeachers(teachers.filter((t) => t.id !== teacherId));
+      alert("Teacher deleted successfully!");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditingTeacher(null);
   };
 
   return (
@@ -58,8 +90,10 @@ export default function TeachersList() {
 
       <AddTeacherModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleAddTeacher}
+        initialData={editingTeacher}
+        isEditMode={isEditMode}
       />
 
       <Card>
@@ -91,6 +125,28 @@ export default function TeachersList() {
             {
               header: "Status",
               accessor: () => <Badge variant="success">Active</Badge>,
+            },
+            {
+              header: "Actions",
+              accessor: (row) => (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditTeacher(row)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteTeacher(row.id, row.name)}
+                    className="text-red-600 hover:text-red-700 hover:border-red-600"
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ),
             },
           ]}
           data={teachers}

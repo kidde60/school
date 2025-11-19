@@ -23,21 +23,51 @@ export default function ExamsList() {
     totalMarks: number;
   } | null>(null);
   const [exams, setExams] = useState(initialExams);
+  const [editingExam, setEditingExam] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleScheduleExam = (examData: ExamFormData) => {
-    const newExam = {
-      id: `E${String(exams.length + 1).padStart(3, "0")}`,
-      name: examData.name,
-      subject: examData.subject,
-      class: examData.class,
-      date: examData.date,
-      startTime: examData.startTime,
-      duration: examData.duration,
-      totalMarks: examData.totalMarks,
-      status: "upcoming" as const,
-    };
-    setExams([...exams, newExam]);
-    alert("Exam scheduled successfully!");
+    if (isEditMode && editingExam) {
+      setExams(
+        exams.map((e) => (e.id === editingExam.id ? { ...e, ...examData } : e))
+      );
+      alert("Exam updated successfully!");
+      setIsEditMode(false);
+      setEditingExam(null);
+    } else {
+      const newExam = {
+        id: `E${String(exams.length + 1).padStart(3, "0")}`,
+        name: examData.name,
+        subject: examData.subject,
+        class: examData.class,
+        date: examData.date,
+        startTime: examData.startTime,
+        duration: examData.duration,
+        totalMarks: examData.totalMarks,
+        status: "upcoming" as const,
+      };
+      setExams([...exams, newExam]);
+      alert("Exam scheduled successfully!");
+    }
+  };
+
+  const handleEditExam = (exam: any) => {
+    setEditingExam(exam);
+    setIsEditMode(true);
+    setIsScheduleModalOpen(true);
+  };
+
+  const handleDeleteExam = (examId: string, examName: string) => {
+    if (window.confirm(`Are you sure you want to delete "${examName}"?`)) {
+      setExams(exams.filter((e) => e.id !== examId));
+      alert("Exam deleted successfully!");
+    }
+  };
+
+  const handleCloseScheduleModal = () => {
+    setIsScheduleModalOpen(false);
+    setIsEditMode(false);
+    setEditingExam(null);
   };
 
   const handleAddMarks = (marksData: MarksFormData) => {
@@ -90,8 +120,10 @@ export default function ExamsList() {
 
       <ScheduleExamModal
         isOpen={isScheduleModalOpen}
-        onClose={() => setIsScheduleModalOpen(false)}
+        onClose={handleCloseScheduleModal}
         onSubmit={handleScheduleExam}
+        initialData={editingExam}
+        isEditMode={isEditMode}
       />
 
       <AddMarksModal
@@ -158,13 +190,55 @@ export default function ExamsList() {
                   {
                     header: "Actions",
                     accessor: (row: any) => (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openMarksModal(row)}
-                      >
-                        Add Marks
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openMarksModal(row)}
+                        >
+                          Add Marks
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditExam(row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteExam(row.id, row.name)}
+                          className="text-red-600 hover:text-red-700 hover:border-red-600"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    ),
+                  },
+                ]
+              : userRole !== "student" && userRole !== "parent"
+              ? [
+                  {
+                    header: "Actions",
+                    accessor: (row: any) => (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEditExam(row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteExam(row.id, row.name)}
+                          className="text-red-600 hover:text-red-700 hover:border-red-600"
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     ),
                   },
                 ]

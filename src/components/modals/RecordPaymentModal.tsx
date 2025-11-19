@@ -7,6 +7,8 @@ interface RecordPaymentModalProps {
   onClose: () => void;
   onSubmit: (payment: PaymentFormData) => void;
   studentName?: string;
+  initialData?: PaymentFormData;
+  isEditMode?: boolean;
 }
 
 export interface PaymentFormData {
@@ -24,6 +26,8 @@ export default function RecordPaymentModal({
   onClose,
   onSubmit,
   studentName,
+  initialData,
+  isEditMode = false,
 }: RecordPaymentModalProps) {
   const [formData, setFormData] = useState<PaymentFormData>({
     studentId: "",
@@ -33,6 +37,7 @@ export default function RecordPaymentModal({
     referenceNumber: "",
     term: "",
     notes: "",
+    ...initialData,
   });
 
   const [errors, setErrors] = useState<Partial<PaymentFormData>>({});
@@ -104,14 +109,16 @@ export default function RecordPaymentModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Record Payment"
+      title={isEditMode ? "Edit Payment" : "Record Payment"}
       size="lg"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Record Payment</Button>
+          <Button onClick={handleSubmit}>
+            {isEditMode ? "Update Payment" : "Record Payment"}
+          </Button>
         </>
       }
     >

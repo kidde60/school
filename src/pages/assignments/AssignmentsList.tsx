@@ -13,21 +13,53 @@ export default function AssignmentsList() {
   const userRole = authData.role || "student";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [assignmentsList, setAssignmentsList] = useState(assignments);
+  const [editingAssignment, setEditingAssignment] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleAddAssignment = (assignmentData: AssignmentFormData) => {
-    const newId = `A${String(assignmentsList.length + 1).padStart(3, "0")}`;
+    if (isEditMode && editingAssignment) {
+      setAssignmentsList(
+        assignmentsList.map((a) =>
+          a.id === editingAssignment.id ? { ...a, ...assignmentData } : a
+        )
+      );
+      alert(`Assignment "${assignmentData.title}" updated successfully!`);
+      setIsEditMode(false);
+      setEditingAssignment(null);
+    } else {
+      const newId = `A${String(assignmentsList.length + 1).padStart(3, "0")}`;
 
-    const newAssignment = {
-      id: newId,
-      title: assignmentData.title,
-      subject: assignmentData.subject,
-      class: assignmentData.class,
-      dueDate: assignmentData.dueDate,
-      status: "pending" as const,
-    };
+      const newAssignment = {
+        id: newId,
+        title: assignmentData.title,
+        subject: assignmentData.subject,
+        class: assignmentData.class,
+        dueDate: assignmentData.dueDate,
+        status: "pending" as const,
+      };
 
-    setAssignmentsList([...assignmentsList, newAssignment]);
-    alert(`Assignment "${assignmentData.title}" created successfully!`);
+      setAssignmentsList([...assignmentsList, newAssignment]);
+      alert(`Assignment "${assignmentData.title}" created successfully!`);
+    }
+  };
+
+  const handleEditAssignment = (assignment: any) => {
+    setEditingAssignment(assignment);
+    setIsEditMode(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteAssignment = (assignmentId: string, title: string) => {
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      setAssignmentsList(assignmentsList.filter((a) => a.id !== assignmentId));
+      alert("Assignment deleted successfully!");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditingAssignment(null);
   };
   return (
     <div className="space-y-6">
@@ -105,6 +137,34 @@ export default function AssignmentsList() {
                 );
               },
             },
+            ...(userRole !== "student"
+              ? [
+                  {
+                    header: "Actions",
+                    accessor: (row: any) => (
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditAssignment(row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteAssignment(row.id, row.title)
+                          }
+                          className="text-red-600 hover:text-red-700 hover:border-red-600"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    ),
+                  },
+                ]
+              : []),
           ]}
           data={assignmentsList}
         />
@@ -112,8 +172,10 @@ export default function AssignmentsList() {
 
       <AddAssignmentModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleAddAssignment}
+        initialData={editingAssignment}
+        isEditMode={isEditMode}
       />
     </div>
   );

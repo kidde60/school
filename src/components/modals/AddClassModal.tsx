@@ -6,6 +6,8 @@ interface AddClassModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (classData: ClassFormData) => void;
+  initialData?: ClassFormData;
+  isEditMode?: boolean;
 }
 
 export interface ClassFormData {
@@ -21,6 +23,8 @@ export default function AddClassModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: AddClassModalProps) {
   const availableSubjects = [
     "Mathematics",
@@ -33,14 +37,16 @@ export default function AddClassModal({
     "Biology",
   ];
 
-  const [formData, setFormData] = useState<ClassFormData>({
-    name: "",
-    subjects: [],
-    teacher: "",
-    capacity: 30,
-    schedule: "",
-    room: "",
-  });
+  const [formData, setFormData] = useState<ClassFormData>(
+    initialData || {
+      name: "",
+      subjects: [],
+      teacher: "",
+      capacity: 30,
+      schedule: "",
+      room: "",
+    }
+  );
 
   const [errors, setErrors] = useState<Partial<ClassFormData>>({});
 
@@ -115,14 +121,16 @@ export default function AddClassModal({
 
   return (
     <Modal
-      isOpen={isOpen}
+      title={isEditMode ? "Edit Class" : "Add New Class"}
       onClose={handleCancel}
-      title="Add New Class"
+      isOpen={isOpen}
       size="lg"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
-            Cancel
+            <Button onClick={handleSubmit}>
+              {isEditMode ? "Update Class" : "Add Class"}
+            </Button>
           </Button>
           <Button onClick={handleSubmit}>Add Class</Button>
         </>

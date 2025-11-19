@@ -6,6 +6,8 @@ interface AddTeacherModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (teacher: TeacherFormData) => void;
+  initialData?: TeacherFormData;
+  isEditMode?: boolean;
 }
 
 export interface TeacherFormData {
@@ -24,18 +26,22 @@ export default function AddTeacherModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: AddTeacherModalProps) {
-  const [formData, setFormData] = useState<TeacherFormData>({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    qualification: "",
-    dateOfBirth: "",
-    gender: "",
-    address: "",
-    employeeId: "",
-  });
+  const [formData, setFormData] = useState<TeacherFormData>(
+    initialData || {
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      qualification: "",
+      dateOfBirth: "",
+      gender: "",
+      address: "",
+      employeeId: "",
+    }
+  );
 
   const [errors, setErrors] = useState<Partial<TeacherFormData>>({});
 
@@ -109,14 +115,16 @@ export default function AddTeacherModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Add New Teacher"
+      title={isEditMode ? "Edit Teacher" : "Add New Teacher"}
       size="xl"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Add Teacher</Button>
+          <Button onClick={handleSubmit}>
+            {isEditMode ? "Update Teacher" : "Add Teacher"}
+          </Button>
         </>
       }
     >

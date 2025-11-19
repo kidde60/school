@@ -6,6 +6,8 @@ interface AddBudgetItemModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (budgetItem: BudgetItemFormData) => void;
+  initialData?: BudgetItemFormData;
+  isEditMode?: boolean;
 }
 
 export interface BudgetItemFormData {
@@ -22,16 +24,20 @@ export default function AddBudgetItemModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: AddBudgetItemModalProps) {
-  const [formData, setFormData] = useState<BudgetItemFormData>({
-    category: "",
-    description: "",
-    amount: 0,
-    type: "Expense",
-    date: new Date().toISOString().split("T")[0],
-    department: "",
-    reference: "",
-  });
+  const [formData, setFormData] = useState<BudgetItemFormData>(
+    initialData || {
+      category: "",
+      description: "",
+      amount: 0,
+      type: "Expense",
+      date: new Date().toISOString().split("T")[0],
+      department: "",
+      reference: "",
+    }
+  );
 
   const [errors, setErrors] = useState<
     Partial<Record<keyof BudgetItemFormData, string>>
@@ -100,14 +106,16 @@ export default function AddBudgetItemModal({
 
   return (
     <Modal
-      isOpen={isOpen}
+      title={isEditMode ? "Edit Budget Item" : "Add Budget Item"}
       onClose={handleCancel}
-      title="Add Budget Item"
+      isOpen={isOpen}
       size="lg"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
-            Cancel
+            <Button onClick={handleSubmit}>
+              {isEditMode ? "Update Item" : "Add Item"}
+            </Button>
           </Button>
           <Button onClick={handleSubmit}>Add Item</Button>
         </>

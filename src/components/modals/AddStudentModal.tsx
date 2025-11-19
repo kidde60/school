@@ -6,6 +6,8 @@ interface AddStudentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (student: StudentFormData) => void;
+  initialData?: StudentFormData;
+  isEditMode?: boolean;
 }
 
 export interface StudentFormData {
@@ -24,18 +26,22 @@ export default function AddStudentModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: AddStudentModalProps) {
-  const [formData, setFormData] = useState<StudentFormData>({
-    name: "",
-    email: "",
-    class: "",
-    parentName: "",
-    parentPhone: "",
-    parentEmail: "",
-    dateOfBirth: "",
-    gender: "",
-    address: "",
-  });
+  const [formData, setFormData] = useState<StudentFormData>(
+    initialData || {
+      name: "",
+      email: "",
+      class: "",
+      parentName: "",
+      parentPhone: "",
+      parentEmail: "",
+      dateOfBirth: "",
+      gender: "",
+      address: "",
+    }
+  );
 
   const [errors, setErrors] = useState<Partial<StudentFormData>>({});
 
@@ -112,14 +118,16 @@ export default function AddStudentModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Add New Student"
+      title={isEditMode ? "Edit Student" : "Add New Student"}
       size="xl"
       footer={
         <>
           <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Add Student</Button>
+          <Button onClick={handleSubmit}>
+            {isEditMode ? "Update Student" : "Add Student"}
+          </Button>
         </>
       }
     >

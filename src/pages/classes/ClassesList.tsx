@@ -11,20 +11,60 @@ import { classes as initialClasses } from "../../data/dummyData";
 export default function ClassesList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [classes, setClasses] = useState(initialClasses);
+  const [editingClass, setEditingClass] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleAddClass = (classData: ClassFormData) => {
-    const newClass = {
-      id: `C${String(classes.length + 1).padStart(3, "0")}`,
-      name: classData.name,
-      subject: classData.subjects.join(", "),
-      teacher: classData.teacher,
-      students: 0,
-      schedule: classData.schedule,
-    };
-    setClasses([...classes, newClass]);
-    alert(
-      `Class added successfully with ${classData.subjects.length} subject(s)!`
-    );
+    if (isEditMode && editingClass) {
+      setClasses(
+        classes.map((c) =>
+          c.id === editingClass.id
+            ? {
+                ...c,
+                name: classData.name,
+                teacher: classData.teacher,
+                subject: classData.subjects.join(", "),
+                schedule: classData.schedule,
+              }
+            : c
+        )
+      );
+      alert("Class updated successfully!");
+      setIsEditMode(false);
+      setEditingClass(null);
+    } else {
+      const newClass = {
+        id: `C${String(classes.length + 1).padStart(3, "0")}`,
+        name: classData.name,
+        subject: classData.subjects.join(", "),
+        teacher: classData.teacher,
+        students: 0,
+        schedule: classData.schedule,
+      };
+      setClasses([...classes, newClass]);
+      alert(
+        `Class added successfully with ${classData.subjects.length} subject(s)!`
+      );
+    }
+  };
+
+  const handleEditClass = (classItem: any) => {
+    setEditingClass(classItem);
+    setIsEditMode(true);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClass = (classId: string, className: string) => {
+    if (window.confirm(`Are you sure you want to delete ${className}?`)) {
+      setClasses(classes.filter((c) => c.id !== classId));
+      alert("Class deleted successfully!");
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditingClass(null);
   };
 
   return (
@@ -58,8 +98,10 @@ export default function ClassesList() {
 
       <AddClassModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         onSubmit={handleAddClass}
+        initialData={editingClass}
+        isEditMode={isEditMode}
       />
 
       <Card>
@@ -91,6 +133,28 @@ export default function ClassesList() {
             {
               header: "Subject",
               accessor: "subject",
+            },
+            {
+              header: "Actions",
+              accessor: (row) => (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditClass(row)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteClass(row.id, row.name)}
+                    className="text-red-600 hover:text-red-700 hover:border-red-600"
+                  >
+                    Delete
+                  </Button>
+                </div>
+              ),
             },
           ]}
           data={classes}

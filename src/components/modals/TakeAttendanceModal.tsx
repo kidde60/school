@@ -6,6 +6,8 @@ interface TakeAttendanceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (attendance: AttendanceFormData) => void;
+  initialData?: AttendanceFormData;
+  isEditMode?: boolean;
 }
 
 export interface AttendanceFormData {
@@ -26,6 +28,8 @@ export default function TakeAttendanceModal({
   isOpen,
   onClose,
   onSubmit,
+  initialData,
+  isEditMode = false,
 }: TakeAttendanceModalProps) {
   // Mock student data - in real app, this would be fetched based on class selection
   const mockStudents: StudentAttendance[] = [
@@ -37,13 +41,15 @@ export default function TakeAttendanceModal({
   ];
 
   const [formData, setFormData] = useState({
-    class: "",
-    date: new Date().toISOString().split("T")[0],
-    subject: "",
-    period: "",
+    class: initialData?.class || "",
+    date: initialData?.date || new Date().toISOString().split("T")[0],
+    subject: initialData?.subject || "",
+    period: initialData?.period || "",
   });
 
-  const [students, setStudents] = useState<StudentAttendance[]>(mockStudents);
+  const [students, setStudents] = useState<StudentAttendance[]>(
+    initialData?.students || mockStudents
+  );
   const [errors, setErrors] = useState<Partial<Record<string, string>>>({});
 
   const handleChange = (
@@ -129,7 +135,7 @@ export default function TakeAttendanceModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Take Attendance"
+      title={isEditMode ? "Edit Attendance" : "Take Attendance"}
       size="xl"
       footer={
         <>
